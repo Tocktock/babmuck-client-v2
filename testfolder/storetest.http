@@ -1,0 +1,2 @@
+###
+GET http://localhost:8080/store/양식?page=1 HTTP/1.1
