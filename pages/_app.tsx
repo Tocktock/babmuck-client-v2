@@ -5,6 +5,7 @@ import ModalAuth from "../src/components/Auth/ModalAuth";
 import { Provider } from "react-redux";
 import store from "../src/store";
 import Alarm from "../src/components/Alarm";
+import { CookiesProvider } from "react-cookie";
 
 export default function App({ Component, pageProps }) {
   return (
@@ -16,12 +17,14 @@ export default function App({ Component, pageProps }) {
           key="ttt"
         />
       </Head>
-      <Provider store={store}>
-        <Navbar />
-        <Alarm />
-        <ModalAuth />
-        <Component {...pageProps} />
-      </Provider>
+      <CookiesProvider>
+        <Provider store={store}>
+          <Navbar />
+          <Alarm />
+          <ModalAuth />
+          <Component {...pageProps} />
+        </Provider>
+      </CookiesProvider>
     </div>
   );
 }
