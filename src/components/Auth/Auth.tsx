@@ -4,6 +4,7 @@ import { MessageType, setAlarmAndShow } from "../../features/alarm/alarmSlice";
 import { toggleModalDisplay } from "../../features/modal/modalSlice";
 import { registerReq, loginReq } from "../../features/user/userService";
 import { userAuthenticated } from "../../features/user/userSlice";
+import { useCookies } from "react-cookie";
 
 interface Props {}
 
@@ -13,6 +14,7 @@ const Auth: React.FC<Props> = (props) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
+  const [cookie, setCookie] = useCookies(["user"]);
 
   const resetInput = () => {
     emailRef!.current.value = "";
@@ -73,6 +75,10 @@ const Auth: React.FC<Props> = (props) => {
         })
       );
     }
+    setCookie("user", result.accessToken, {
+      path: "/",
+      maxAge: 3600,
+    });
     resetInput();
   };
 
