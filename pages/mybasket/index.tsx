@@ -14,6 +14,7 @@ import {
 } from "../../src/features/payment/paymentSlice";
 
 export default function Home(props) {
+  const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.userState);
   const [priceSum, setPriceSum] = useState(0);
   const [basketItems, setBasketItems] = useState(null);
@@ -63,6 +64,9 @@ export default function Home(props) {
     );
   }, [basketItems]);
 
+  useEffect(() => {
+    dispatch(resetOrdersForPayment());
+  }, []);
   return (
     <div className="w-full mx-auto divide-y-2 space-y-4 divide-autumnT-300 bg-gray-50 flex flex-col items-center justify-items-center rounded-md">
       <div className="divide-y-2 divide-autumnT-300">{groupedItems}</div>

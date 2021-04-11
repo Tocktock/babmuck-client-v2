@@ -41,6 +41,7 @@ export default function Home({ allPostsData }) {
                 <Link href={`/supplier-detail/${Supplier.id}`}>
                   <a>
                     <SupplierRow
+                      key={index}
                       location={Supplier.location}
                       supplierName={Supplier.supplierName}
                       supplierId={Supplier.id}

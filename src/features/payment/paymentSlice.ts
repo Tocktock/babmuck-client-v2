@@ -21,6 +21,11 @@ const OrdersForPayment = createSlice({
   initialState,
   reducers: {
     addOrdersForPayment(state, action: PayloadAction<OrderForPayment>) {
+      //단순반복
+      //이후 map 사용시 관리 수월
+      for (let i = 0; i < state.orders.length; i++) {
+        if (state.orders[i].orderId == action.payload.orderId) return;
+      }
       state.orders.push(action.payload);
     },
     removeOrderForPayment(state, action: PayloadAction<number>) {

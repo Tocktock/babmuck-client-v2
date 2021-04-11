@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   addOrdersForPayment,
@@ -8,17 +8,12 @@ import {
   removeOrderForPayment,
   OrderForPayment,
 } from "../../features/payment/paymentSlice";
-export interface Menu {
-  menuId: number;
-  menuName: String;
-  price: number;
-  quentity: number;
-}
+import { UPDATE_ORDER_URL } from "../../constants";
+import axios from "axios";
+import { RootState } from "../../rootReducer";
+import { MessageType, setAlarmAndShow } from "../../features/alarm/alarmSlice";
+import BasketRowDetail from "./BasketRowDetail";
 
-export interface Store {
-  storeName: string;
-  location: string;
-}
 interface Props {
   orderId: number;
   products: any;
@@ -28,10 +23,8 @@ interface Props {
 const BasketRow: React.FC<Props> = (props) => {
   const dispatch = useDispatch();
   const checkboxRef = useRef();
-
   const toggleItemForPayment = (e) => {
     if (e.target.checked) {
-      console.log("added");
       dispatch(
         addOrdersForPayment({
           orderId: props.orderId,
@@ -41,9 +34,9 @@ const BasketRow: React.FC<Props> = (props) => {
       );
     } else {
       dispatch(removeOrderForPayment(props.orderId));
-      console.log("removed");
     }
   };
+
   return (
     <div className="flex flex-col mt-8">
       <div>{props.supplier.supplierName}</div>
@@ -51,14 +44,16 @@ const BasketRow: React.FC<Props> = (props) => {
 
       <div className="flex">
         <div className="flex flex-col w-full">
-          {props.products.map((product) => (
-            <div>
-              {product.productName} : {product.productPrice} :{" "}
-              {product.quentity} 개
-            </div>
-          ))}
+          {props.products.map((product) => {
+            return (
+              <BasketRowDetail
+                product={product}
+                supplierId={props.supplier.supplierId}
+              ></BasketRowDetail>
+            );
+          })}
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center pl-8">
           <input
             ref={checkboxRef}
             onChange={toggleItemForPayment}
@@ -72,7 +67,7 @@ const BasketRow: React.FC<Props> = (props) => {
           props.supplier.supplierId ? props.supplier.supplierId : 0
         }`}
       >
-        수정하러가기
+        메뉴 다시 고르기
       </Link>
     </div>
   );
