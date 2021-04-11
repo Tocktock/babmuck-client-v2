@@ -6,20 +6,26 @@ import { userAuthenticated } from "../../features/user/userSlice";
 import { MessageType, setAlarmAndShow } from "../../features/alarm/alarmSlice";
 import axios from "axios";
 import Link from "next/link";
+import { useCookies } from "react-cookie";
 
 export default function Profile() {
   const dispatch = useDispatch();
   const [displayMyMenu, setDisplayMyMenu] = useState(false);
-  const { username } = useSelector((state) => state.userState);
+  const userState = useSelector((state) => state.userState);
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const signOut = () => {
-    const goodbyeUser = username;
+    const goodbyeUser = userState.username;
     dispatch(
       userAuthenticated({
         accessToken: "",
         isAuthenticated: false,
         username: "",
+        email: "",
       })
     );
+    removeCookie("user", {
+      path: "/",
+    });
     setDisplayMyMenu(false);
     dispatch(
       setAlarmAndShow({
@@ -40,7 +46,9 @@ export default function Profile() {
           <span className="sr-only">Open user menu</span>
         </button>
 
-        <div className="mr-12">{username != "" && `welcome ${username}`}</div>
+        <div className="mr-12">
+          {userState.username != "" && `welcome ${userState.username}`}
+        </div>
         <button
           className="text-autumnT-500 hover:text-autumnT-400 focus:outline-none"
           onClick={() => setDisplayMyMenu(!displayMyMenu)}

@@ -1,12 +1,15 @@
-import { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { MessageType, setAlarmAndShow } from "../../features/alarm/alarmSlice";
 import { toggleModalDisplay } from "../../features/modal/modalSlice";
 import { registerReq, loginReq } from "../../features/user/userService";
 import { userAuthenticated } from "../../features/user/userSlice";
 import { useCookies } from "react-cookie";
+import axios from "axios";
 
 interface Props {}
+
+const AUTH_WITH_ACCESSTOKEN_URL = "http://localhost:8080/auth/user/accessToken";
 
 const Auth: React.FC<Props> = (props) => {
   const [showRegisterForm, setShowRegisterForm] = useState<boolean>(false);
@@ -14,7 +17,43 @@ const Auth: React.FC<Props> = (props) => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
-  const [cookie, setCookie] = useCookies(["user"]);
+  const [cookies, setCookie] = useCookies(["user"]);
+  const userState = useSelector((state) => state.userState);
+  useEffect(() => {
+    if (cookies.user && !userState.isAuthenticated) {
+      const result = axios
+        .post(
+          AUTH_WITH_ACCESSTOKEN_URL,
+          {},
+          {
+            headers: { Authorization: ` Bearer ${cookies.user}` },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.username)
+            dispatch(
+              userAuthenticated({
+                accessToken: cookies.user,
+                isAuthenticated: true,
+                username: res.data.username,
+                email: res.data.email,
+              })
+            );
+          return res.data;
+        });
+    } else if (!cookies.user && userState.isAuthenticated) {
+      dispatch(
+        userAuthenticated({
+          accessToken: "",
+          isAuthenticated: false,
+          username: "",
+          email: "",
+        })
+      );
+      axios.defaults.headers.common["Authorization"] = "";
+    }
+  });
 
   const resetInput = () => {
     emailRef!.current.value = "";
@@ -59,12 +98,13 @@ const Auth: React.FC<Props> = (props) => {
       wrongInputAlarm();
     } else {
       resetInput();
+      console.log(result);
       dispatch(
         userAuthenticated({
           accessToken: result.accessToken,
           isAuthenticated: true,
           username: result.username,
-          email: email,
+          email: result.email,
         })
       );
       dispatch(toggleModalDisplay());
@@ -77,7 +117,7 @@ const Auth: React.FC<Props> = (props) => {
     }
     setCookie("user", result.accessToken, {
       path: "/",
-      maxAge: 3600,
+      maxAge: 86400,
     });
     resetInput();
   };
