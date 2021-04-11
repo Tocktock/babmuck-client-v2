@@ -7,11 +7,12 @@ import { MessageType, setAlarmAndShow } from "../../features/alarm/alarmSlice";
 import axios from "axios";
 import Link from "next/link";
 import { useCookies } from "react-cookie";
+import { RootState } from "../../rootReducer";
 
 export default function Profile() {
   const dispatch = useDispatch();
   const [displayMyMenu, setDisplayMyMenu] = useState(false);
-  const userState = useSelector((state) => state.userState);
+  const userState = useSelector((state: RootState) => state.userState);
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const signOut = () => {
     const goodbyeUser = userState.username;

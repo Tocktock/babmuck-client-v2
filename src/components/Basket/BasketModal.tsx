@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Welcome from "./Welcome";
-import Auth from "./Auth";
 import { useSelector, useDispatch } from "react-redux";
 import { setAlarmAndShow } from "../../features/alarm/alarmSlice";
 import { toggleModalDisplay } from "../../features/modal/modalSlice";

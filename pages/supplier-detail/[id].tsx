@@ -5,12 +5,13 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import FormType from "../../src/components/SupplierDetail/FormType";
 import { ADD_ORDER_URL, SUPPLIER_DETAIL_URL } from "../../src/constants";
+import { RootState } from "../../src/rootReducer";
 
 const hashSelector = new Map();
 
 export default function supplierDetail(props) {
   const [priceSum, setPriceSum] = useState(0);
-  const userState = useSelector((state) => state.userState);
+  const userState = useSelector((state: RootState) => state.userState);
 
   const checkBoxHandler = (productId, price, quentity) => {
     console.log(productId, price, quentity);

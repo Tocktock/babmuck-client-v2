@@ -6,12 +6,13 @@ import MobileNavigation from "./MobileNavigation";
 import LoginButton from "./LoginButton";
 import Logo from "./Logo";
 import { useSelector } from "react-redux";
+import { RootState } from "../../rootReducer";
 
 interface Props {}
 
 const Navbar: React.FC<Props> = (props) => {
   const { isAuthenticated, username, email } = useSelector(
-    (state) => state.userState
+    (state: RootState) => state.userState
   );
   return (
     <nav className="bg-autumnT-100 ">
