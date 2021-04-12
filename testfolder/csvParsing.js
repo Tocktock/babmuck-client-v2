@@ -42,8 +42,8 @@ rows.forEach((row) => {
   const supplierName = storeData[2];
   const location = storeData[3] !== "" ? storeData[3] : storeData[4];
   const tel = storeData[5] !== "" ? storeData[5] : randomTel();
-  const latitude = storeData[7] === "" ? randomLat() : storeData[7];
-  const longitude = storeData[8] === "" ? randomLon() : storeData[8];
+  const latitude = storeData[8] === "" ? randomLon() : storeData[8];
+  const longitude = storeData[7] === "" ? randomLat() : storeData[7];
 
   const storeCategory = randomCategory[parseInt(Math.random() * 4)];
   if (result.length > 500) return;
