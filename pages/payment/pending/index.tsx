@@ -1,21 +1,21 @@
-import Link from "next/link";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../src/rootReducer";
-import OrderRow from "../../src/components/Order/OrderRow";
-import { resetOrdersForPayment } from "../../src/features/payment/paymentSlice";
+import { RootState } from "../../../src/rootReducer";
+import OrderRow from "../../../src/components/Order/OrderRow";
+import { resetOrdersForPayment } from "../../../src/features/payment/paymentSlice";
 import {
   MessageType,
   setAlarmAndShow,
-} from "../../src/features/alarm/alarmSlice";
+} from "../../../src/features/alarm/alarmSlice";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 
-const hashSelector = new Map();
-const BILLING_REQ_URL = "http://localhost:8080/billing/complete";
+const BILLING_REQ_URL = "http://localhost:8080/billing/pending/complete";
 const PENDING_REQ_URL = "http://localhost:8080/billing/pending/add";
+const PENDING_ORDERS_URL = "http://localhost:8080/order/pending/orders";
 
-export default function supplierDetail(props) {
+export default function pendingPayment(props) {
   const dispatch = useDispatch();
   const router = useRouter();
   const ordersForPaymentState = useSelector(
@@ -46,8 +46,7 @@ export default function supplierDetail(props) {
     let orderResult = false;
     if (paymentNow === true) {
       const result = await axios.post(BILLING_REQ_URL, {
-        orderIds: ordersForPaymentState.orders.map((order) => order.orderId),
-        email: userState.email,
+        billId: ordersForPaymentState.billId,
         paymentMethod: paymentMethod,
       });
       orderResult = OrderResultHandler(result);
@@ -83,6 +82,7 @@ export default function supplierDetail(props) {
       return false;
     }
   };
+
   return (
     <div className="w-full mx-auto divide-y-2 space-y-4 divide-autumnT-300 bg-gray-50 flex flex-col items-center justify-items-center rounded-md">
       <div className="w-full py-6 pl-6">결제하기</div>
@@ -113,15 +113,8 @@ export default function supplierDetail(props) {
           >
             지금결제
           </button>
-          <button
-            onClick={() => setPaymentNow(false)}
-            className={`px-4 py-2 text-xs font-semibold tracking-wider rounded focus:outline-none focus:ring-2 focus:ring-offset-2 +
-              ${paymentNow ? notSelectedColor : selectedColor}`}
-          >
-            나중에결제
-          </button>
         </div>
-        <div className="relative inline-flex mt-5">
+        <div className="relative inline-flex">
           <svg
             className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
             xmlns="http://www.w3.org/2000/svg"

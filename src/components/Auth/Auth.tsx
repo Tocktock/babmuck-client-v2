@@ -6,6 +6,7 @@ import { registerReq, loginReq } from "../../features/user/userService";
 import { userAuthenticated } from "../../features/user/userSlice";
 import { useCookies } from "react-cookie";
 import axios from "axios";
+import { RootState } from "../../rootReducer";
 
 interface Props {}
 
@@ -18,7 +19,7 @@ const Auth: React.FC<Props> = (props) => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const [cookies, setCookie] = useCookies(["user"]);
-  const userState = useSelector((state) => state.userState);
+  const userState = useSelector((state: RootState) => state.userState);
   useEffect(() => {
     if (cookies.user && !userState.isAuthenticated) {
       const result = axios
@@ -114,11 +115,11 @@ const Auth: React.FC<Props> = (props) => {
           type: MessageType.success,
         })
       );
+      setCookie("user", result.accessToken, {
+        path: "/",
+        maxAge: 86400,
+      });
     }
-    setCookie("user", result.accessToken, {
-      path: "/",
-      maxAge: 86400,
-    });
     resetInput();
   };
 

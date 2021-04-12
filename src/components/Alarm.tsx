@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { MessageType, setAlarmDefault } from "../features/alarm/alarmSlice";
+import { RootState } from "../rootReducer";
 
 const Alarm: React.FC = () => {
-  const { message, type } = useSelector((state) => state.alarmState);
+  const { message, type } = useSelector((state: RootState) => state.alarmState);
   const [messageColor, setmessageColor] = useState<string>("bg-green-400");
   const [alarmPos, setAlarmPos] = useState<string>("-translate-y-24");
 

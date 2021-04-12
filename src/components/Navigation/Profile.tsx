@@ -72,7 +72,15 @@ export default function Profile() {
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
             >
-              My Basket
+              장바구니
+            </a>
+          </Link>
+          <Link href="/payment/payment-list">
+            <a
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              role="menuitem"
+            >
+              결제내역
             </a>
           </Link>
           <button

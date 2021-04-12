@@ -6,6 +6,7 @@ import { setAlarmAndShow } from "../../features/alarm/alarmSlice";
 import { toggleModalDisplay } from "../../features/modal/modalSlice";
 import { faSignOutAlt, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { RootState } from "../../rootReducer";
 
 interface Props {}
 
@@ -17,7 +18,7 @@ const ModalAuth: React.FC<Props> = (props) => {
     dispatch(setAlarmAndShow({ message: "test", type: 2 }));
   };
 
-  const { modalDisplay } = useSelector((state) => state.modalState);
+  const { modalDisplay } = useSelector((state: RootState) => state.modalState);
 
   const toggleModalState = () => {
     dispatch(toggleModalDisplay());

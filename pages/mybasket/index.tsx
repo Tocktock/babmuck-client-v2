@@ -3,22 +3,19 @@ import Link from "next/link";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import BasketRow, { Menu } from "../../src/components/Basket/BasketRow";
+import BasketRow from "../../src/components/Basket/BasketRow";
 import { MY_BASKET_URL } from "../../src/constants";
 import { RootState } from "../../src/rootReducer";
-import {
-  addOrdersForPayment,
-  resetOrdersForPayment,
-  removeOrderForPayment,
-  OrderForPayment,
-} from "../../src/features/payment/paymentSlice";
+import { resetOrdersForPayment } from "../../src/features/payment/paymentSlice";
+import { resetBasket, setBasket } from "../../src/features/basket/basketSlice";
 
 export default function Home(props) {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.userState);
+  const basketState = useSelector((state: RootState) => state.basketState);
   const [priceSum, setPriceSum] = useState(0);
-  const [basketItems, setBasketItems] = useState(null);
-  const [groupedItems, setGroupedItems] = useState(null);
+  // const [basketItems, setBasketItems] = useState(null);
+  // const [groupedItems, setGroupedItems] = useState(null);
   const ordersForPaymentState = useSelector(
     (state: RootState) => state.ordersForPaymentState
   );
@@ -28,7 +25,19 @@ export default function Home(props) {
     const data = axios
       .post(MY_BASKET_URL, { email: userState.email })
       .then((res) => {
-        setBasketItems(res.data);
+        // setBasketItems(res.data);
+        const baskets = res.data.map((v) => {
+          return {
+            orderId: v.orderId,
+            products: v.items,
+            supplier: {
+              supplierId: v.supplierId,
+              supplierName: v.supplierName,
+            },
+          };
+        });
+        console.log(baskets);
+        dispatch(setBasket(baskets));
         return res.data;
       });
   }, [userState]);
@@ -43,33 +52,57 @@ export default function Home(props) {
     setPriceSum(sum);
   }, [ordersForPaymentState]);
 
-  useEffect(() => {
-    if (basketItems == null) return;
-    // basket item 을 order id로 묶기.
-    setGroupedItems(
-      basketItems.map((v, index) => {
-        const supplier = {
-          supplierId: v.supplierId,
-          supplierName: v.supplierName,
-        };
-        return (
-          <BasketRow
-            key={index}
-            orderId={v.orderId}
-            supplier={supplier}
-            products={v.items}
-          ></BasketRow>
-        );
-      })
-    );
-  }, [basketItems]);
+  // useEffect(() => {
+  //   if (basketItems == null) return;
+  //   // basket item 을 order id로 묶기.
+  //   setGroupedItems(
+  //     basketItems.map((v, index) => {
+  //       const supplier = {
+  //         supplierId: v.supplierId,
+  //         supplierName: v.supplierName,
+  //       };
+  //       return (
+  //         <BasketRow
+  //           key={index}
+  //           orderId={v.orderId}
+  //           supplier={supplier}
+  //           products={v.items}
+  //         ></BasketRow>
+  //       );
+  //     })
+  //   );
+  // }, [basketItems]);
 
   useEffect(() => {
+    let sum = 0;
+    console.log(basketState);
+    basketState.basket.forEach((items) => {
+      items.products.forEach((item) => {
+        sum += item.quentity * item.productPrice;
+      });
+    });
+    setPriceSum(sum);
+  }, [basketState]);
+
+  useEffect(() => {
+    dispatch(resetBasket());
     dispatch(resetOrdersForPayment());
   }, []);
+
   return (
     <div className="w-full mx-auto divide-y-2 space-y-4 divide-autumnT-300 bg-gray-50 flex flex-col items-center justify-items-center rounded-md">
-      <div className="divide-y-2 divide-autumnT-300">{groupedItems}</div>
+      <div className="divide-y-2 divide-autumnT-300">
+        {basketState.basket.map((v, k) => {
+          return (
+            <BasketRow
+              key={k}
+              orderId={v.orderId}
+              supplier={v.supplier}
+              products={v.products}
+            ></BasketRow>
+          );
+        })}
+      </div>
       <div className="h-32 flex justify-items-start">
         <span> 총 주문금액 </span> <span>: {priceSum} </span>
       </div>

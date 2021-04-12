@@ -6,19 +6,18 @@ import { useSelector } from "react-redux";
 import FormType from "../../src/components/SupplierDetail/FormType";
 import { ADD_ORDER_URL, SUPPLIER_DETAIL_URL } from "../../src/constants";
 import { RootState } from "../../src/rootReducer";
+import GoogleMaps from "../../src/components/GoogleMap";
 
 const hashSelector = new Map();
 
 export default function supplierDetail(props) {
   const [priceSum, setPriceSum] = useState(0);
   const userState = useSelector((state: RootState) => state.userState);
-
+  const [renderState, setRenderState] = useState(false);
   const checkBoxHandler = (productId, price, quentity) => {
-    console.log(productId, price, quentity);
     hashSelector.set(productId, { price, quentity });
     let sum = 0;
     hashSelector.forEach((v) => {
-      console.log(v);
       sum += v.price * v.quentity;
     });
     setPriceSum(sum);
@@ -44,13 +43,13 @@ export default function supplierDetail(props) {
         email: userState.email,
       })
       .then((res) => res.data);
-    console.log(data);
   };
 
   //clear
   useEffect(() => {
     hashSelector.clear();
     setPriceSum(0);
+    setRenderState(true);
   }, []);
 
   return (
@@ -86,6 +85,11 @@ export default function supplierDetail(props) {
             </a>
           </Link>
         )}
+        <div className="w-full">
+          <GoogleMaps
+            center={{ lat: props.longitude, lng: props.latitude }}
+          ></GoogleMaps>
+        </div>
       </div>
     </div>
   );
@@ -96,7 +100,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const supplier = await fetch(`${SUPPLIER_DETAIL_URL}${target}`).then((res) =>
     res.json()
   );
-  console.log(supplier);
   return {
     props: {
       supplierId: supplier.id,

@@ -3,14 +3,16 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { UPDATE_ORDER_URL } from "../../constants";
 import { MessageType, setAlarmAndShow } from "../../features/alarm/alarmSlice";
+import { changeBasket } from "../../features/basket/basketSlice";
 import { RootState } from "../../rootReducer";
 
 export interface Props {
+  orderId: number;
   product: any;
   supplierId: number;
 }
 
-const BasketRowDetail: React.FC<Props> = ({ product, supplierId }) => {
+const BasketRowDetail: React.FC<Props> = ({ orderId, product, supplierId }) => {
   const dispatch = useDispatch();
   const [modifyMode, setModifyMode] = useState(false);
   const userState = useSelector((state: RootState) => state.userState);
@@ -37,6 +39,13 @@ const BasketRowDetail: React.FC<Props> = ({ product, supplierId }) => {
           })
         );
         setQuentity(counter);
+        dispatch(
+          changeBasket({
+            orderId,
+            productId: product.productId,
+            productQuentity: product.quentity,
+          })
+        );
       } else {
         dispatch(
           setAlarmAndShow({

@@ -9,10 +9,12 @@ export interface OrderForPayment {
 
 interface CurrentOrdersForPayment {
   orders: OrderForPayment[];
+  billId?: number;
 }
 
 let initialState: CurrentOrdersForPayment = {
   orders: [],
+  billId: null,
 } as CurrentOrdersForPayment;
 
 // immer will ensure mutable
@@ -20,6 +22,9 @@ const OrdersForPayment = createSlice({
   name: "ordersForPaymentState",
   initialState,
   reducers: {
+    setBillingId(state, action: PayloadAction<number>) {
+      state.billId = action.payload;
+    },
     addOrdersForPayment(state, action: PayloadAction<OrderForPayment>) {
       //단순반복
       //이후 map 사용시 관리 수월
@@ -38,6 +43,7 @@ const OrdersForPayment = createSlice({
 });
 
 export const {
+  setBillingId,
   addOrdersForPayment,
   removeOrderForPayment,
   resetOrdersForPayment,

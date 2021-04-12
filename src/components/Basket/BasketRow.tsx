@@ -47,6 +47,7 @@ const BasketRow: React.FC<Props> = (props) => {
           {props.products.map((product) => {
             return (
               <BasketRowDetail
+                orderId={props.orderId}
                 product={product}
                 supplierId={props.supplier.supplierId}
               ></BasketRowDetail>
