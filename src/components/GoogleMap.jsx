@@ -28,10 +28,9 @@ const mapElementStyle = { height: "100%" };
 
 export default function GoogleMaps(props) {
   defaultCenter = props.center;
-  console.log(defaultCenter);
   return (
     <RegularMap
-      googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTkMNsz4ns6_gUUS2UvqgfkGKoGc-FMxQ"
+      googleMapURL={`https://maps.googleapis.com/maps/api/js?key=AIzaSyBOuxCJY9pEUXqXb58fDr8rpa1Z2is1gfw`}
       loadingElement={<div style={loadingElementStyle} />}
       containerElement={<div style={containerElementStyle} />}
       mapElement={<div style={mapElementStyle} />}

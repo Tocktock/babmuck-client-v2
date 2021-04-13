@@ -11,6 +11,9 @@ export default function pendingPayment(props) {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.userState);
   const [billingList, setBillingList] = useState(null);
+  const [pendingList, setPendingList] = useState(null);
+
+  const [cancleList, setCancleList] = useState(null);
   useEffect(() => {
     if (!userState.isAuthenticated) return;
     const result = axios
@@ -23,17 +26,20 @@ export default function pendingPayment(props) {
       });
   }, [userState]);
 
+  useEffect(() => {
+    if (billingList == null) return;
+  }, [billingList]);
+
   return (
-    <div className="w-full h-screen mx-auto divide-y-2 space-y-4 divide-autumnT-300 bg-gray-50 flex flex-col items-center justify-items-center rounded-md">
+    <div className="w-full h-screen overflow-auto mx-auto divide-y-2 space-y-4 divide-autumnT-300 bg-gray-50 flex flex-col items-center justify-items-center rounded-md">
       {billingList &&
         billingList.map((v, k) => {
           return (
             <BillingCard
-              billId={v.billId}
               createAt={v.createAt}
               paymentMethod={v.paymentMethod}
-              price={v.price}
-              supllierId={1}
+              price={v.billingPrice}
+              orderDetail={v.orderDetails}
             ></BillingCard>
           );
         })}

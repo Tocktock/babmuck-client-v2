@@ -9,6 +9,7 @@ import {
   changeSelectedOrderInBasket,
   removeOrderForPayment,
 } from "../../features/payment/paymentSlice";
+
 export interface Props {
   orderId: number;
   product: any;
@@ -34,16 +35,24 @@ const BasketRowDetail: React.FC<Props> = ({
         setModifyMode(!modifyMode);
         return;
       }
-      const result = await axios.post(UPDATE_ORDER_URL, {
-        orderDetailInfo: [
-          {
-            productId: product.productId,
-            quentity: counter,
-          },
-        ],
-        email: userState.email,
-        supplierId: supplierId,
-      });
+      // const result = await axios.post(UPDATE_ORDER_URL, {
+      //   orderDetailInfo: [
+      //     {
+      //       productId: product.productId,
+      //       quentity: counter,
+      //     },
+      //   ],
+      //   email: userState.email,
+      //   supplierId: supplierId,
+      // });
+      const result = await axios.post(
+        "http://localhost:8080/order/mybasket/change-order-detail",
+        {
+          orderId: orderId,
+          productId: product.productId,
+          quentity: counter,
+        }
+      );
       if (result.data) {
         dispatch(
           setAlarmAndShow({

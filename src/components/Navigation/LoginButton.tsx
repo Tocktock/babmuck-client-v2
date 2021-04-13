@@ -17,7 +17,7 @@ const LoginButton: React.FC<Props> = (props) => {
         dispatch(toggleModalDisplay());
       }}
     >
-      Sign In
+      <span className="text-sm font-bold">로그인</span>
     </button>
   );
 };

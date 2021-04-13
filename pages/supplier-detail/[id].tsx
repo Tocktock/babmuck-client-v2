@@ -31,6 +31,15 @@ export default function supplierDetail(props) {
   };
 
   const addToBasketReq = async () => {
+    if (priceSum === 0) {
+      dispatch(
+        setAlarmAndShow({
+          message: "하나 이상의 품목을 선택해주세요",
+          type: MessageType.warning,
+        })
+      );
+      return;
+    }
     const items = [];
     hashSelector.forEach((value, productId) => {
       items.push({

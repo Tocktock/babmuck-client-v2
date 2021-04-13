@@ -51,6 +51,7 @@ export default function supplierDetail(props) {
       );
       return;
     }
+    console.log(ordersForPaymentState.orders);
     let orderResult = false;
     if (paymentNow === true) {
       const result = await axios.post(BILLING_REQ_URL, {

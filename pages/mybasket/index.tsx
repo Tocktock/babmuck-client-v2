@@ -54,7 +54,7 @@ export default function Home(props) {
   }, []);
 
   return (
-    <div className="w-full mx-auto divide-y-2 space-y-4 divide-autumnT-300 bg-gray-50 flex flex-col items-center justify-items-center rounded-md">
+    <div className="w-full h-screen overflow-auto mx-auto divide-y-2 space-y-4 divide-autumnT-300 bg-gray-50 flex flex-col items-center justify-items-center rounded-md">
       <div className="divide-y-2 divide-autumnT-300 w-1/3">
         {basketState.basket.map((v, k) => {
           return (
@@ -67,15 +67,17 @@ export default function Home(props) {
           );
         })}
       </div>
-      <div className="h-8 py-2 flex justify-items-start text-gray-800 text-xl font-semibold">
+      <div className="h-8 py-2 flex justify-items-start text-gray-800 text-xl font-semibold pb-10">
         <span className="block">총 주문금액</span>
         <span className="block w-32">: {priceSum} </span>
       </div>
-      <Link href="/payment">
-        <a className="mt-2 bg-blue-500 px-5 py-2 font-semibold tracking-wider text-white rounded-full hover:bg-blue-600">
-          주문하기
-        </a>
-      </Link>
+      {ordersForPaymentState.orders.length > 0 && (
+        <Link href="/payment">
+          <a className="mt-2 bg-blue-500 px-5 py-2 font-semibold tracking-wider text-white rounded-full hover:bg-blue-600">
+            주문하기
+          </a>
+        </Link>
+      )}
     </div>
   );
 }

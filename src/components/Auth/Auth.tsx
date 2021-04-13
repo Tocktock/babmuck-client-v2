@@ -115,6 +115,7 @@ const Auth: React.FC<Props> = (props) => {
           type: MessageType.success,
         })
       );
+
       setCookie("user", result.accessToken, {
         path: "/",
         maxAge: 86400,
@@ -188,7 +189,7 @@ const Auth: React.FC<Props> = (props) => {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center px-2">
-          <input
+          {/* <input
             id="remember_me"
             name="remember_me"
             type="checkbox"
@@ -199,7 +200,7 @@ const Auth: React.FC<Props> = (props) => {
             className="ml-2 block text-sm text-gray-900"
           >
             Remember me
-          </label>
+          </label> */}
         </div>
       </div>
 
@@ -223,7 +224,7 @@ const Auth: React.FC<Props> = (props) => {
               />
             </svg>
           </span>
-          {showRegisterForm ? "Register" : "SignIn"}
+          {showRegisterForm ? "가입하기" : "로그인하기"}
         </button>
         <button
           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-500 hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -232,14 +233,14 @@ const Auth: React.FC<Props> = (props) => {
             setShowRegisterForm(!showRegisterForm);
           }}
         >
-          {showRegisterForm ? "Go to SignIn" : "Go to Register"}
+          {showRegisterForm ? "로그인하러가기" : "가입하러하기"}
         </button>
         <div className="text-sm text-center py-2">
           <a
             href="#"
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
-            Forgot your password?
+            비밀번호가 기억이 안나시나요?
           </a>
         </div>
       </div>

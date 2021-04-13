@@ -125,7 +125,7 @@ export default function pendingPayment(props) {
             지금결제
           </button>
         </div>
-        <div className="relative inline-flex">
+        <div className="relative inline-flex mt-5">
           <svg
             className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none"
             xmlns="http://www.w3.org/2000/svg"
