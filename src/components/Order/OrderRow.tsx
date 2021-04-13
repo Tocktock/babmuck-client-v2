@@ -15,20 +15,26 @@ const OrderRow: React.FC<Props> = (props) => {
   });
 
   return (
-    <div className="flex flex-col mt-8">
-      <div>{props.supplier.supplierName}</div>
+    <div className="py-4 px-8 bg-white shadow-lg rounded-lg my-6">
+      <div className="my-2 text-xl text-gray-600">
+        {props.supplier.supplierName}
+      </div>
       <hr />
       <div className="flex">
         <div className="flex flex-col w-full">
-          {props.products.map((product) => (
-            <div>
-              {product.productName} : {product.productPrice} :{" "}
-              {product.quentity} 개
-            </div>
-          ))}
+          {props.products.map((product) => {
+            if (product.quentity == 0) return;
+            return (
+              <div>
+                {product.productName} : {product.productPrice} :{" "}
+                {product.quentity} 개
+              </div>
+            );
+          })}
         </div>
       </div>
-      <div>총 {price} : 원 </div>
+      <hr></hr>
+      <div className="mt-2"> {price} : 원 </div>
     </div>
   );
 };

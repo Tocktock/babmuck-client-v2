@@ -5,14 +5,23 @@ import { UPDATE_ORDER_URL } from "../../constants";
 import { MessageType, setAlarmAndShow } from "../../features/alarm/alarmSlice";
 import { changeBasket } from "../../features/basket/basketSlice";
 import { RootState } from "../../rootReducer";
-
+import {
+  changeSelectedOrderInBasket,
+  removeOrderForPayment,
+} from "../../features/payment/paymentSlice";
 export interface Props {
   orderId: number;
   product: any;
   supplierId: number;
+  disableCheckbox: any;
 }
 
-const BasketRowDetail: React.FC<Props> = ({ orderId, product, supplierId }) => {
+const BasketRowDetail: React.FC<Props> = ({
+  orderId,
+  product,
+  supplierId,
+  disableCheckbox,
+}) => {
   const dispatch = useDispatch();
   const [modifyMode, setModifyMode] = useState(false);
   const userState = useSelector((state: RootState) => state.userState);
@@ -21,6 +30,10 @@ const BasketRowDetail: React.FC<Props> = ({ orderId, product, supplierId }) => {
 
   const modifyHandler = async () => {
     if (modifyMode === true) {
+      if (counter === product.quentity) {
+        setModifyMode(!modifyMode);
+        return;
+      }
       const result = await axios.post(UPDATE_ORDER_URL, {
         orderDetailInfo: [
           {
@@ -43,9 +56,11 @@ const BasketRowDetail: React.FC<Props> = ({ orderId, product, supplierId }) => {
           changeBasket({
             orderId,
             productId: product.productId,
-            productQuentity: product.quentity,
+            productQuentity: counter,
           })
         );
+        dispatch(removeOrderForPayment(orderId));
+        disableCheckbox();
       } else {
         dispatch(
           setAlarmAndShow({
@@ -70,7 +85,7 @@ const BasketRowDetail: React.FC<Props> = ({ orderId, product, supplierId }) => {
   return (
     <div className="flex my-1 justify-between">
       <div className="px-2">
-        {product.productName} : {product.productPrice} :{quentity} 개
+        {product.productName} : {product.productPrice} : {quentity} 개
       </div>
 
       {modifyMode && (
@@ -78,13 +93,18 @@ const BasketRowDetail: React.FC<Props> = ({ orderId, product, supplierId }) => {
           <button onClick={decreseCounter} className="bg-gray-200 w-5 mx-1">
             -
           </button>
-          <span> {counter} 개로 수정</span>
+          <span> {counter}</span>
           <button onClick={increseCounter} className="bg-gray-200 w-5 mx-1">
             +
           </button>
         </div>
       )}
-      <button onClick={modifyHandler}>수정</button>
+      <button
+        className=" text-xs font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300"
+        onClick={modifyHandler}
+      >
+        {modifyMode ? "완료" : "수정"}
+      </button>
     </div>
   );
 };

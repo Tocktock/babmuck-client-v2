@@ -5,6 +5,11 @@ export interface OrderForPayment {
   supplier: any;
 }
 
+export interface changeSelectedOrderInBasket {
+  orderId: number;
+  quentity: number;
+}
+
 // 이후에 map으로 관리할 수 있으면 더 좋을 듯.
 
 interface CurrentOrdersForPayment {
@@ -26,12 +31,15 @@ const OrdersForPayment = createSlice({
       state.billId = action.payload;
     },
     addOrdersForPayment(state, action: PayloadAction<OrderForPayment>) {
-      //단순반복
       //이후 map 사용시 관리 수월
+
       for (let i = 0; i < state.orders.length; i++) {
         if (state.orders[i].orderId == action.payload.orderId) return;
       }
       state.orders.push(action.payload);
+    },
+    changeSelectedOrderInBasket(state, action: PayloadAction<number>) {
+      state.orders = state.orders.filter((v) => v.orderId != action.payload);
     },
     removeOrderForPayment(state, action: PayloadAction<number>) {
       state.orders = state.orders.filter((v) => v.orderId != action.payload);
@@ -43,6 +51,7 @@ const OrdersForPayment = createSlice({
 });
 
 export const {
+  changeSelectedOrderInBasket,
   setBillingId,
   addOrdersForPayment,
   removeOrderForPayment,

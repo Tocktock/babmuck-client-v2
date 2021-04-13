@@ -47,8 +47,8 @@ export default function Profile() {
           <span className="sr-only">Open user menu</span>
         </button>
 
-        <div className="mr-12">
-          {userState.username != "" && `welcome ${userState.username}`}
+        <div className="mr-12 text-center align-middle">
+          {userState.username != "" && `반갑습니다 ${userState.username}`}
         </div>
         <button
           className="text-autumnT-500 hover:text-autumnT-400 focus:outline-none"
@@ -62,14 +62,14 @@ export default function Profile() {
 
       {displayMyMenu && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5"
+          className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-20"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu"
         >
           <Link href="/mybasket">
             <a
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="text-center hover:no-underline w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
             >
               장바구니
@@ -77,7 +77,7 @@ export default function Profile() {
           </Link>
           <Link href="/payment/payment-list">
             <a
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="text-center hover:no-underline w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               role="menuitem"
             >
               결제내역
@@ -85,10 +85,10 @@ export default function Profile() {
           </Link>
           <button
             onClick={signOut}
-            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className="w-full block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             role="menuitem"
           >
-            Sign out
+            로그아웃
           </button>
         </div>
       )}

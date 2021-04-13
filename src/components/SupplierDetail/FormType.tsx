@@ -29,9 +29,9 @@ const FormType: React.FC<Props> = ({
   }, [counter]);
 
   return (
-    <div className="w-1/2 flex justify-between items-center">
+    <div className="w-1/2 flex justify-between items-center mt-4">
       <div>
-        <span className="ml-2">
+        <span className="ml-2 font-bold">
           {productName} : {productPrice}
         </span>
       </div>

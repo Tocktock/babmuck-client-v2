@@ -42,7 +42,15 @@ export default function supplierDetail(props) {
   };
 
   const billingReq = async () => {
-    if (paymentNow == true && paymentMethod == "-1") return;
+    if (paymentNow == true && paymentMethod == "-1") {
+      dispatch(
+        setAlarmAndShow({
+          message: "결제 방법을 선택해주세요",
+          type: MessageType.warning,
+        })
+      );
+      return;
+    }
     let orderResult = false;
     if (paymentNow === true) {
       const result = await axios.post(BILLING_REQ_URL, {
@@ -83,12 +91,24 @@ export default function supplierDetail(props) {
       return false;
     }
   };
+
+  useEffect(() => {
+    if (!ordersForPaymentState) return;
+
+    let sum = 0;
+    ordersForPaymentState.orders.forEach((order) => {
+      order.products.forEach((product) => {
+        sum += product.quentity * product.productPrice;
+      });
+    });
+    setPriceSum(sum);
+  }, [ordersForPaymentState]);
   return (
     <div className="w-full mx-auto divide-y-2 space-y-4 divide-autumnT-300 bg-gray-50 flex flex-col items-center justify-items-center rounded-md">
-      <div className="w-full py-6 pl-6">결제하기</div>
+      <div className="w-full py-6 pl-6 text-xl">결제하기</div>
       <div className="w-full py-6 pl-6">
-        <div> 주문 리스트 </div>
-        <div>
+        <div className="w-full text-xl"> 주문 리스트 </div>
+        <div className="w-1/3">
           {ordersForPaymentState.orders.length > 0 &&
             ordersForPaymentState.orders.map((order, key) => (
               <OrderRow
@@ -99,15 +119,18 @@ export default function supplierDetail(props) {
               />
             ))}
         </div>
-        <div>주문 총 액 :</div>
+        <div className="h-8 py-2 flex justify-items-start text-gray-800 text-xl font-semibold">
+          <span className="block">총 주문금액</span>
+          <span className="block w-32"> : {priceSum} </span>
+        </div>
       </div>
       <div className="w-full py-6 pl-6">
-        <div> 결제 시기</div>
+        <div className="text-xl"> 결제 시기</div>
         <hr></hr>
-        <div className="w-full">
+        <div className="w-full mt-4">
           <button
             onClick={() => setPaymentNow(true)}
-            className={`px-4 py-2 text-xs font-semibold tracking-wider rounded  focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+            className={`px-6 py-3 mr-4 text-xs font-semibold tracking-wider rounded  focus:outline-none focus:ring-2 focus:ring-offset-2 ${
               paymentNow ? selectedColor : notSelectedColor
             }`}
           >
@@ -115,7 +138,7 @@ export default function supplierDetail(props) {
           </button>
           <button
             onClick={() => setPaymentNow(false)}
-            className={`px-4 py-2 text-xs font-semibold tracking-wider rounded focus:outline-none focus:ring-2 focus:ring-offset-2 +
+            className={`px-6 py-3 text-xs font-semibold tracking-wider rounded focus:outline-none focus:ring-2 focus:ring-offset-2 +
               ${paymentNow ? notSelectedColor : selectedColor}`}
           >
             나중에결제
@@ -136,7 +159,7 @@ export default function supplierDetail(props) {
           <select
             ref={paymentMethodRef}
             onChange={handlePaymentMethod}
-            className="border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
+            className="border border-gray-300 rounded-md text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
           >
             <option value="-1">Choose Payment Method</option>
             <option value="0">카드결제</option>
@@ -148,7 +171,7 @@ export default function supplierDetail(props) {
       <div className="w-full text-center content-center justify-center">
         <button
           onClick={billingReq}
-          className="mt-12 bg-blue-500 px-5 py-2 font-semibold tracking-wider text-white rounded-full hover:bg-blue-600"
+          className="mt-12 text-lg bg-blue-500 px-5 py-2 font-semibold tracking-wider text-white rounded-full hover:bg-blue-600"
         >
           주문하기
         </button>
